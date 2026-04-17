@@ -17,7 +17,13 @@ from io import BytesIO
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3001"}})
+CORS(app, resources={r"/api/*": {"origins": [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "http://localhost:5000",
+    "https://*.vercel.app",
+    "https://*.onrender.com"
+]}})
 
 # ──────────────────────────────────────────────
 # Config
