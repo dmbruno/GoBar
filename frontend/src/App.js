@@ -5,7 +5,7 @@ import './App.css';
 const API_URL = process.env.REACT_APP_API_URL || '';
 
 function App() {
-  // Steps: 1=upload, 2=compose, 3=sending, 4=done
+  // Steps: 1=upload, 2=compose, 3=sending, 4=doneeee
   const [step, setStep] = useState(1);
   const [contacts, setContacts] = useState([]);
   const [duplicatesRemoved, setDuplicatesRemoved] = useState(0);
