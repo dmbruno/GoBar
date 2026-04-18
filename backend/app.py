@@ -4,6 +4,7 @@ import time
 import base64
 import json
 import threading
+import re
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
@@ -34,6 +35,12 @@ jobs = {}
 # ──────────────────────────────────────────────
 # Email template
 # ──────────────────────────────────────────────
+def validate_email(email):
+    """Validate email format. Requires TLD with 3+ letters (e.g., .com, .org, .es, not .co)"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$'
+    return re.match(pattern, email) is not None
+
+
 def build_html_email(subject, body_text, has_image=False):
     """Builds a professional HTML email template."""
     image_block = ""
@@ -148,13 +155,18 @@ def process_email_job(job_id, contacts, subject, body_text, image_data):
         email = contact["email"]
         name = contact.get("name", "")
 
-        try:
-            send_single_email(email, name, subject, html_template, image_data)
-            job["sent"] += 1
-            job["log"].append({"email": email, "status": "ok", "name": name})
-        except Exception as e:
+        # Validate email format first
+        if not validate_email(email):
             job["failed"] += 1
-            job["log"].append({"email": email, "status": "error", "error": str(e), "name": name})
+            job["log"].append({"email": email, "status": "error", "error": "Formato de correo inválido", "name": name})
+        else:
+            try:
+                send_single_email(email, name, subject, html_template, image_data)
+                job["sent"] += 1
+                job["log"].append({"email": email, "status": "ok", "name": name})
+            except Exception as e:
+                job["failed"] += 1
+                job["log"].append({"email": email, "status": "error", "error": str(e), "name": name})
 
         job["progress"] = int(((i + 1) / job["total"]) * 100)
 
