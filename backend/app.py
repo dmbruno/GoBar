@@ -280,7 +280,7 @@ def parse_excel():
 
             for row in ws.iter_rows(min_row=2, values_only=True):
                 email = str(row[email_col] or "").strip()
-                if not email or "@" not in email:
+                if not email:
                     continue
 
                 name_parts = []
@@ -320,7 +320,7 @@ def parse_excel():
 
             for row in reader:
                 email = (row.get(email_field) or "").strip()
-                if not email or "@" not in email:
+                if not email:
                     continue
 
                 name_parts = []

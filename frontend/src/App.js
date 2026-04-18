@@ -178,19 +178,29 @@ function App() {
     if (imageInputRef.current) imageInputRef.current.value = '';
   };
 
-  // Download sent emails as CSV
+  // Download all emails (success + errors) as CSV
   const downloadSentEmails = () => {
     if (!jobStatus?.log || jobStatus.log.length === 0) return;
 
-    const sentEmails = jobStatus.log.filter(entry => entry.status === 'ok');
-    if (sentEmails.length === 0) return;
+    const allEmails = jobStatus.log;
 
-    const csv = ['Email,Nombre'].concat(sentEmails.map(e => `${e.email},${e.name || ''}`)).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    // Header with Status and Error columns
+    const csvLines = ['Email,Nombre,Estado,Observaciones'];
+
+    // Add all emails (successful and failed)
+    allEmails.forEach(e => {
+      const estado = e.status === 'ok' ? 'Enviado' : 'Error';
+      const observaciones = e.error || '';
+      const line = `"${e.email}","${e.name || ''}","${estado}","${observaciones}"`;
+      csvLines.push(line);
+    });
+
+    const csv = csvLines.join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `correos-enviados-${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `correos-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
   };
