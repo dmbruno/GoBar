@@ -36,7 +36,63 @@ jobs = {}
 # Email template
 # ──────────────────────────────────────────────
 def validate_email(email):
-    """Validate email format. Requires TLD with 3+ letters (e.g., .com, .org, .es, not .co)"""
+    """Comprehensive email validation without requiring SMTP connection."""
+    if not email or not isinstance(email, str):
+        return False
+
+    email = email.strip()
+
+    # 1. Basic format check
+    if '@' not in email or email.count('@') != 1:
+        return False
+
+    local, domain = email.rsplit('@', 1)
+
+    # 2. Check for spaces
+    if ' ' in email:
+        return False
+
+    # 3. Local part validation (before @)
+    if not local or len(local) > 64:
+        return False
+    if local.startswith('.') or local.endswith('.'):
+        return False
+    if '..' in local:
+        return False
+
+    # 4. Valid characters in local part
+    valid_local_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._%+-')
+    if not all(c in valid_local_chars for c in local):
+        return False
+
+    # 5. Domain validation
+    if not domain or len(domain) > 255:
+        return False
+    if domain.startswith('.') or domain.endswith('.'):
+        return False
+    if '..' in domain:
+        return False
+
+    # 6. Domain must have at least one dot
+    if '.' not in domain:
+        return False
+
+    # 7. TLD validation (3+ letters, no numbers)
+    parts = domain.split('.')
+    tld = parts[-1]
+    if len(tld) < 3 or not tld.isalpha():
+        return False
+
+    # 8. Domain parts validation
+    for part in parts:
+        if not part or len(part) > 63:
+            return False
+        if part.startswith('-') or part.endswith('-'):
+            return False
+        if not all(c in 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-' for c in part):
+            return False
+
+    # 9. Full regex pattern check
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$'
     return re.match(pattern, email) is not None
 
