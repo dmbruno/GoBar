@@ -196,13 +196,14 @@ function App() {
   };
 
   const SentEmailsList = () => {
-    const sentEmails = jobStatus?.log?.filter(entry => entry.status === 'ok') || [];
+    const allEmails = jobStatus?.log || [];
+    const successEmails = allEmails.filter(entry => entry.status === 'ok');
 
     return (
       <div className="sent-emails-card">
         <div className="sent-emails-header">
-          <h3>Correos Enviados ({sentEmails.length})</h3>
-          {sentEmails.length > 0 && (
+          <h3>Correos ({allEmails.length})</h3>
+          {successEmails.length > 0 && (
             <button className="btn-download" onClick={downloadSentEmails}>
               📥 Descargar CSV
             </button>
@@ -210,18 +211,19 @@ function App() {
         </div>
 
         <div className="sent-emails-list">
-          {sentEmails.length > 0 ? (
-            sentEmails.map((entry, i) => (
-              <div key={i} className="sent-email-item">
-                <span className="email-icon">✓</span>
+          {allEmails.length > 0 ? (
+            allEmails.map((entry, i) => (
+              <div key={i} className={`sent-email-item ${entry.status === 'ok' ? 'success' : 'error'}`}>
+                <span className="email-icon">{entry.status === 'ok' ? '✓' : '✗'}</span>
                 <div className="email-content">
                   <div className="email-address">{entry.email}</div>
                   {entry.name && <div className="email-name">{entry.name}</div>}
+                  {entry.error && <div className="email-error">{entry.error}</div>}
                 </div>
               </div>
             ))
           ) : (
-            <div className="empty-state">Sin correos enviados</div>
+            <div className="empty-state">Sin correos</div>
           )}
         </div>
       </div>

@@ -316,12 +316,21 @@
   border: 1px solid rgba(52, 211, 153, 0.15);
 }
 
+.sent-email-item.error {
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 .email-icon {
   color: #34d399;
   font-weight: 600;
   min-width: 20px;
   text-align: center;
   margin-top: 1px;
+}
+
+.sent-email-item.error .email-icon {
+  color: #ef4444;
 }
 
 .email-content {
@@ -338,6 +347,10 @@
   font-weight: 500;
 }
 
+.sent-email-item.error .email-address {
+  color: #ef4444;
+}
+
 .email-name {
   font-size: 0.75rem;
   color: #888;
@@ -345,6 +358,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.email-error {
+  font-size: 0.7rem;
+  color: #ef4444;
+  margin-top: 4px;
+  font-style: italic;
 }
 
 .empty-state {
