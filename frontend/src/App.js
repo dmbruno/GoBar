@@ -447,6 +447,21 @@ function App() {
               </div>
             </div>
 
+            {jobStatus.sent > 0 && jobStatus.log && (
+              <div className="log-section">
+                <h3>Correos exitosos</h3>
+                <div className="log-list">
+                  {jobStatus.log.filter(e => e.status === 'ok').map((entry, i) => (
+                    <div key={i} className="log-entry ok">
+                      <span className="log-status">✓</span>
+                      <span className="log-email">{entry.email}</span>
+                      {entry.name && <span className="log-name">({entry.name})</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {jobStatus.failed > 0 && jobStatus.log && (
               <div className="log-section">
                 <h3>Correos fallidos</h3>
