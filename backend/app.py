@@ -14,6 +14,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from openpyxl import load_workbook
 from io import BytesIO
+from urllib.parse import quote
 
 load_dotenv()
 
@@ -114,6 +115,10 @@ def build_html_email(subject, body_text, has_image=False):
     # Convert newlines to <br> for the body
     body_html = body_text.replace("\n", "<br>")
 
+    # Create WhatsApp message with subject
+    whatsapp_message = f"Me interesa {subject}"
+    whatsapp_url = f"https://wa.me/5493876371293?text={quote(whatsapp_message)}"
+
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -152,6 +157,11 @@ def build_html_email(subject, body_text, has_image=False):
               <!-- Footer -->
               <tr>
                 <td style="background-color: #f8f9fa; padding: 20px 40px; text-align: center; border-top: 1px solid #e9ecef;">
+                  <p style="margin: 0 0 15px 0;">
+                    <a href="{whatsapp_url}" style="display: inline-block; padding: 10px 20px; background-color: #25D366; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px;">
+                      📱 Consultar por WhatsApp
+                    </a>
+                  </p>
                   <p style="color: #999999; font-size: 12px; margin: 0;">
                     Este correo fue enviado por GoBar. Si no deseas recibir más correos,
                     por favor respondé a este email con el asunto "DESUSCRIBIR".
