@@ -154,12 +154,21 @@ def build_html_email(subject, body_text, has_image=False):
                 </td>
               </tr>
 
+              <!-- CTA Section -->
+              <tr>
+                <td style="padding: 20px 40px; border-top: 1px solid #e9ecef;">
+                  <p style="color: #6366f1; font-size: 15px; line-height: 1.6; margin: 0; font-weight: 500;">
+                    No dejes pasar {subject}! Hace click en el botón de WhatsApp y ponete en contacto con nosotros 👇
+                  </p>
+                </td>
+              </tr>
+
               <!-- Footer -->
               <tr>
                 <td style="background-color: #f8f9fa; padding: 20px 40px; text-align: center; border-top: 1px solid #e9ecef;">
                   <p style="margin: 0 0 15px 0;">
                     <a href="{whatsapp_url}" style="display: inline-block; padding: 10px 20px; background-color: #25D366; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 14px;">
-                      📱 Consultar por WhatsApp
+                      📱 Escribime por whats app
                     </a>
                   </p>
                   <p style="color: #999999; font-size: 12px; margin: 0;">
