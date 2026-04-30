@@ -210,7 +210,9 @@ def send_single_email(to_email, to_name, subject, html_content, image_data=None)
         img.add_header("Content-Disposition", "inline", filename=image_data["filename"])
         msg.attach(img)
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+    with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        server.ehlo()
+        server.starttls()
         server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
         server.send_message(msg)
 
@@ -478,7 +480,9 @@ def test_connection():
         return jsonify({"error": "Gmail no está configurado"}), 500
 
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
+            server.ehlo()
+            server.starttls()
             server.login(GMAIL_USER, GMAIL_APP_PASSWORD)
         return jsonify({"status": "ok", "message": f"Conexión exitosa con {GMAIL_USER}"})
     except smtplib.SMTPAuthenticationError:
